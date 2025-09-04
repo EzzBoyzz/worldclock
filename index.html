@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Clock Simple</title>
+  <title>World Clock Analog</title>
   <style>
     body {
       margin: 0;
@@ -35,21 +35,52 @@
     }
     .city {
       font-weight: bold;
-      margin-bottom: 8px;
+      margin: 12px 0;
     }
-    .time {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 6px;
+    .clock {
+      width: 150px;
+      height: 150px;
+      border: 6px solid #333;
+      border-radius: 50%;
+      position: relative;
+      margin: 0 auto;
+      background: white;
     }
-    .date {
-      font-size: 14px;
-      color: #555;
+    .hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform-origin: bottom;
+      transform: translateX(-50%);
+      background: #333;
+    }
+    .hour {
+      width: 6px;
+      height: 40px;
+    }
+    .minute {
+      width: 4px;
+      height: 55px;
+    }
+    .second {
+      width: 2px;
+      height: 65px;
+      background: red;
+    }
+    .center {
+      width: 12px;
+      height: 12px;
+      background: #333;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   </style>
 </head>
 <body>
-  <h1>🌍 World Clock</h1>
+  <h1>🌍 World Analog Clock</h1>
   <div class="grid" id="grid"></div>
   
   <script src="script.js"></script>
