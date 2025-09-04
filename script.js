@@ -21,6 +21,25 @@ cities.forEach(city => {
   `;
   grid.appendChild(card);
 
+  const clock = card.querySelector(".clock");
+
+  // Tambahkan angka 1-12
+  for (let i = 1; i <= 12; i++) {
+    const number = document.createElement("div");
+    number.className = "number";
+    number.innerText = i;
+    
+    const angle = (i * 30 - 90) * (Math.PI / 180); // rotasi (jam 12 di atas)
+    const radius = 65; // jarak angka dari pusat
+    const x = 75 + radius * Math.cos(angle);
+    const y = 75 + radius * Math.sin(angle);
+    
+    number.style.left = `${x}px`;
+    number.style.top = `${y}px`;
+    
+    clock.appendChild(number);
+  }
+
   const hourHand = card.querySelector(".hour");
   const minuteHand = card.querySelector(".minute");
   const secondHand = card.querySelector(".second");
