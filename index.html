@@ -1,95 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Clock Analog</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      color: #222;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
-    }
-    h1 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      width: 100%;
-      max-width: 800px;
-    }
-    .card {
-      background: #fff;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    .city {
-      font-weight: bold;
-      margin: 12px 0;
-    }
-    .clock {
-      width: 150px;
-      height: 150px;
-      border: 6px solid #333;
-      border-radius: 50%;
-      position: relative;
-      margin: 0 auto;
-      background: white;
-    }
-    .hand {
-      position: absolute;
-      bottom: 50%;
-      left: 50%;
-      transform-origin: bottom;
-      transform: translateX(-50%);
-      background: #333;
-    }
-    .hour {
-      width: 6px;
-      height: 40px;
-    }
-    .minute {
-      width: 4px;
-      height: 55px;
-    }
-    .second {
-      width: 2px;
-      height: 65px;
-      background: red;
-    }
-    .center {
-      width: 12px;
-      height: 12px;
-      background: #333;
-      border-radius: 50%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .number {
-      position: absolute;
-      font-size: 14px;
-      font-weight: bold;
-      transform: translate(-50%, -50%);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist World Clock</title>
+    <style>
+        :root {
+            /* Light Theme */
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #cccccc;
+            --hand-color: #333333;
+            --second-hand-color: #e74c3c;
+            --marker-color: #bbbbbb;
+            --hour-marker-color: #888888;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* Dark Theme */
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-color: #f0f0f0;
+                --border-color: #444444;
+                --hand-color: #f0f0f0;
+                --second-hand-color: #f1c40f;
+                --marker-color: #666666;
+                --hour-marker-color: #999999;
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+            line-height: 1.6;
+        }
+
+        .global-date {
+            font-size: 1em;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 kolom */
+            grid-template-rows: repeat(2, auto);   /* 2 baris */
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        /* 🚫 Sembunyikan card ke-9 dan seterusnya */
+        .grid-container .card:nth-child(n+9) {
+            display: none;
+        }
+
+        .card {
+            text-align: center;
+        }
+
+        .city {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .clock {
+            width: 180px;
+            height: 180px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto;
+            background: var(--card-bg);
+            transition: background 0.3s, border 0.3s;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            transform: translateX(-50%);
+            border-radius: 50px;
+            background: var(--hand-color);
+        }
+
+        .hour {
+            width: 4px;
+            height: 35px;
+        }
+
+        .minute {
+            width: 3px;
+            height: 50px;
+        }
+
+        .second {
+            width: 1.5px;
+            height: 60px;
+            background: var(--second-hand-color);
+        }
+
+        .center {
+            width: 8px;
+            height: 8px;
+            background: var(--hand-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        .marker {
+            position: absolute;
+            width: 2px;
+            height: 6px;
+            top: 0;
+            left: 50%;
+            transform-origin: center 90px;
+            background: var(--marker-color);
+            border-radius: 1px;
+        }
+        
+        .marker.hour-marker {
+            height: 10px;
+            background: var(--hour-marker-color);
+        }
+
+        .number {
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+        }
+
+        :root {
+            /* 🌞 Variabel untuk tema terang */
+            --day-bg: #ffffff;
+            --day-border: #333333;
+            --day-hand: #333333;
+            --day-second-hand: #e74c3c;
+            --day-number: #000000;
+            --day-marker: #cccccc;
+            --day-hour-marker: #888888;
+        }
+
+        .clock {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto;
+            background: var(--day-bg);
+            border-color: var(--day-border);
+            transition: background 0.3s, border 0.3s;
+        }
+
+        .clock.day .hand { background: var(--day-hand); }
+        .clock.day .second { background: var(--day-second-hand); }
+        .clock.day .number { color: var(--day-number); }
+        .clock.day .marker { background: var(--day-marker); }
+        .clock.day .marker.hour-marker { background: var(--day-hour-marker); }
+
+        /* 🌙 Variabel dan kelas untuk tema gelap */
+        .clock.night {
+            --night-bg: #2c3e50;
+            --night-border: #ecf0f1;
+            --night-hand: #ecf0f1;
+            --night-second-hand: #f1c40f;
+            --night-number: #ecf0f1;
+            --night-marker: #7f8c8d;
+            --night-hour-marker: #ecf0f1;
+            
+            background: var(--night-bg);
+            border-color: var(--night-border);
+        }
+
+        .clock.night .hand { background: var(--night-hand); }
+        .clock.night .second { background: var(--night-second-hand); }
+        .clock.night .number { color: var(--night-number); }
+        .clock.night .marker { background: var(--night-marker); }
+        .clock.night .marker.hour-marker { background: var(--night-hour-marker); }
+
+        body {
+            background: #000000; /* Warna latar belakang siang */
+            transition: background 0.3s;
+        }
+
+        body.night-mode {
+            background: #121212; /* Warna latar belakang malam */
+        }
+
+        @media (max-width: 600px) {
+            .global-date {
+                font-size: 0.9em;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .clock {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>🌍 World Analog Clock</h1>
-  <div class="grid" id="grid"></div>
-
-  <!-- Pisahkan script ke file eksternal -->
-  <script src="script.js"></script>
+    <div class="global-date" id="global-date"></div>
+    <div class="grid-container" id="grid">
+        <!-- maksimal hanya 8 card akan tampil -->
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
